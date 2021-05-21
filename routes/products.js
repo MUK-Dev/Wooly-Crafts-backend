@@ -1,9 +1,8 @@
 const express = require("express");
 
-const HttpError = require('../models/http-error');
-const getAllProducts = require("../controllers/product-controller")
+const productController = require("../controllers/product-controller")
 const router  = express.Router();
 
-router.route("/products").get();
+router.route("/products").get(productController.getAllProducts).post(productController.postNewProduct);
 
 module.exports = router;

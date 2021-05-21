@@ -4,6 +4,8 @@ const cors = require("cors");
 
 const products = require("./routes/products");
 const orders = require("./routes/orders");
+const authentication = require("./routes/authentication");
+const messages = require("./routes/messages");
 
 const app = express();
 app.use(express.json());
@@ -18,17 +20,19 @@ app.use((req, res, next) => {
 		res.setHeader("Access-Control-Allow-Methods", "GET POST PATCH DELETE");
 		next();
 });
-app.use(products);
-app.use(orders);
 
 app.use((error, req, res, next) => {
 	if (res.headerSent) {
-	  return next(error);
+		return next(error);
 	}
 	res.status(error.code || 500);
 	res.json({ message: error.message || 'An unknown error occurred!' });
 });
-  
+
+app.use(products);
+app.use(orders);
+// app.use(authentication);
+app.use(messages);
 
 //-------------------- Database Connection --------------------
 

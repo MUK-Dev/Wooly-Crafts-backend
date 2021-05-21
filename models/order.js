@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 
 const orderSchema = mongoose.Schema(
     {
-        customerName: {type: String, required: true},
-        customerEmail: {type: String, required: true},
-        customerAddress: {type: String, required: true},
-        totalBill: {type: String, required: true},
-        paymentMethod: {type: String, required: true},
+        customerName: String,
+        customerEmail: String,
+        customerAddress: String,
+        totalBill: String,
+        paymentMethod: String,
         order: [
             {
-                image: {type: String, required: true},
-                productName: {type: String, required: true},
-                productPrice: {type: String, required: true},
+                image: String,
+                productName: String,
+                productPrice: String,
             }
         ]
     },
@@ -19,3 +19,23 @@ const orderSchema = mongoose.Schema(
 )
 
 module.exports = mongoose.model("Order",orderSchema);
+
+// {
+//     "name": "M Usman Khilji",
+//     "email": "manian1221@gmail.com",
+//     "address": "This is where my address will be",
+//     "totalBill": "5000",
+//     "paymentMethod": "Cash On Delivery",
+//     "order": [
+//         {
+//             "image": "imageUrl",
+//             "productName": "Sweater",
+//             "productPrice": "2500"
+//         },
+//         {
+//             "image": "imageUrl",
+//             "productName": "Sweater",
+//             "productPrice": "2500"
+//         }
+//     ]
+// }
