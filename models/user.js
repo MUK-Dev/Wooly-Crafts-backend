@@ -12,3 +12,10 @@ const userSchema = mongoose.Schema(
 );
 
 module.exports = mongoose.model("User",userSchema);
+
+// {
+//     "name": "Sample User",
+//     "email": "test@test.com",
+//     "phone": "111222333",
+//     "password": "123456"
+// }

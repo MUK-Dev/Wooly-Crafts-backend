@@ -32,7 +32,7 @@ app.use((error, req, res, next) => {
 
 app.use(products);
 app.use(orders);
-// app.use(authentication);
+app.use(authentication);
 app.use(messages);
 
 //-------------------- Database Connection --------------------
