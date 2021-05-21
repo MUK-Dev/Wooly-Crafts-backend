@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -36,7 +37,7 @@ app.use(messages);
 
 //-------------------- Database Connection --------------------
 
-mongoose.connect("mongodb://localhost:27017/woolyCraftsDB", {
+mongoose.connect(process.env.DB_CONNECTION, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false,
