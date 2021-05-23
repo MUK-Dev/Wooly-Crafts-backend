@@ -5,8 +5,10 @@ const orderSchema = mongoose.Schema(
         customerName: String,
         customerEmail: String,
         customerAddress: String,
+        customerPhone: String,
         totalBill: String,
         paymentMethod: String,
+        finished: Boolean,
         order: [
             {
                 image: String,
@@ -25,7 +27,9 @@ module.exports = mongoose.model("Order",orderSchema);
 //     "email": "manian1221@gmail.com",
 //     "address": "This is where my address will be",
 //     "totalBill": "5000",
+//     "customerPhone": "03313933344",
 //     "paymentMethod": "Cash On Delivery",
+//     "finished": false,
 //     "order": [
 //         {
 //             "image": "imageUrl",
