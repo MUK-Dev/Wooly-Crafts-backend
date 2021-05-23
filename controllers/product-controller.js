@@ -20,12 +20,16 @@ const getAllProducts = async (req,res,next)=>{
 //---------------Add New Products From here---------------
 
 const postNewProduct = async (req,res,next)=>{
+    const imagesUrl=[];
+    req.files.map(file=>{
+        imagesUrl.push(file.path)
+    })
     const newProduct = new Product(
         {
             name: req.body.name,
             description: req.body.description,
             soldOut: false,
-            images: req.body.images,
+            images: imagesUrl,
         }
     )
     try {

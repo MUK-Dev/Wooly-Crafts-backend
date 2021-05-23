@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const fs = require("fs");
 
 const products = require("./routes/products");
 const orders = require("./routes/orders");
@@ -9,8 +10,6 @@ const authentication = require("./routes/authentication");
 const messages = require("./routes/messages");
 
 const app = express();
-app.use(express.json());
-app.use(cors());
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader(
@@ -21,7 +20,12 @@ app.use((req, res, next) => {
 		res.setHeader("Access-Control-Allow-Methods", "GET POST PATCH DELETE");
 		next();
 });
+	
+app.use(cors());
 
+app.use(express.json({
+	limit: 52428800
+}));
 app.use((error, req, res, next) => {
 	if (res.headerSent) {
 		return next(error);

@@ -5,9 +5,7 @@ const productSchema = mongoose.Schema(
         name: String,
         description: String,
         soldOut: Boolean,
-        images: [
-            {url: String}
-        ]
+        images: []
     },
     { timestamps: true }
 )
