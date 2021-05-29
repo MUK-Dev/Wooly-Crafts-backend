@@ -1,4 +1,6 @@
+require("dotenv").config();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 
 const HttpError = require("../models/http-error");
@@ -23,7 +25,7 @@ const getAllUsers = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   let existingUser;
-  let registeredUser;
+  let token;
   try {
     existingUser = await User.findOne({ email: req.body.email });
   } catch (err) {
@@ -50,30 +52,37 @@ const register = async (req, res, next) => {
         phone: req.body.phone,
         password: hash,
       });
+
       try {
-        await user.save((err, result) => {
-            if (!err) {
-                if(result === true){
-                    registeredUser = {
-                        _id: foundUser._id,
-                        name: foundUser.name,
-                        email: foundUser.email,
-                        phone: foundUser.phone,
-                    };
-                }
-            } else {
-                res.send(err);
-            }
-        });
+        await user.save();
       } catch (err) {
-          const error = new HttpError(
-              "Couldn't Register, please try again",
-              500
-          );
-          return next(error);
+        const error = new HttpError("Couldn't Register, please try again", 500);
+        return next(error);
       }
-      //Send back use data and session token from here
-      res.send(registeredUser);
+      try {
+        const tokenUser = {
+          name: user.name,
+          phone: user.phone,
+          email: user.email,
+        };
+        token = jwt.sign({ tokenUser }, process.env.JWT_KEY, {
+          expiresIn: "2h",
+        });
+        console.log("1 ", token);
+      } catch (err) {
+        const error = new HttpError("Couldn't generate token", 500);
+        return next(error);
+      }
+
+      res.send({
+        message: "Successfully Registered, Happy Shopping!",
+        userInfo: {
+          name: user.name,
+          phone: user.phone,
+          email: user.email,
+        },
+        token: token,
+      });
     }
   });
 };
@@ -82,35 +91,51 @@ const register = async (req, res, next) => {
 
 //---------------Login Existing User---------------------
 
-const login = async (req,res,next)=>{
-    let loggedInUser;
-    try {
-        await User.findOne({ email: req.body.email }, (err, foundUser) => {
-            if(!err){
-                if (foundUser) {
-                    bcrypt.compare(req.body.password, foundUser.password, (error, result)=> {
-                        if(result === true){
-                            loggedInUser = {
-                                _id: foundUser._id,
-                                name: foundUser.name,
-                                email: foundUser.email,
-                                phone: foundUser.phone,
-                            };
-                        }
-                    });
-                } 
+const login = async (req, res, next) => {
+  let token;
+  try {
+    await User.findOne({ email: req.body.email }, (err, foundUser) => {
+      if (!err) {
+        if (foundUser) {
+          bcrypt.compare(req.body.password, foundUser.password, (e, result) => {
+            if (result === true) {
+              let payload = {
+                name: foundUser.name,
+                email: foundUser.email,
+                phone: foundUser.phone,
+              };
+              try {
+                token = jwt.sign({ payload }, process.env.JWT_KEY, {
+                  expiresIn: "2h",
+                });
+              } catch (erro) {
+                const error = new HttpError(
+                  "Couldn't Login, please try again",
+                  500
+                );
+                return next(error);
+              }
+
+              res.send({
+                message: "Login Successful",
+                userInfo: {
+                  _id: foundUser._id,
+                  name: foundUser.name,
+                  email: foundUser.email,
+                  phone: foundUser.phone,
+                },
+                token: token,
+              });
             }
-        });
-    } catch (err) {
-        const error = new HttpError(
-            "Login Failed, please try again",
-            500
-        );
-        return next(error);
-    }
-    //Login user and send a session token here
-    res.send(loggedInUser);
-}
+          });
+        }
+      }
+    });
+  } catch (err) {
+    const error = new HttpError("Login Failed, please try again", 500);
+    return next(error);
+  }
+};
 
 //------------------------------------------------------------
 

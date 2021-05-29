@@ -1,21 +1,33 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const productSchema = mongoose.Schema(
-    {
-        name: String,
-        description: String,
-        soldOut: Boolean,
-        images: []
-    },
-    { timestamps: true }
-)
+  {
+    name: String,
+    description: String,
+    price: String,
+    soldOut: Boolean,
+    images: [],
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("Product",productSchema);
+productSchema.index(
+  { name: "text", description: "text" },
+  {
+    weights: {
+      name: 5,
+      description: 1,
+    },
+  }
+);
+
+module.exports = mongoose.model("Product", productSchema);
 
 // {
 //     "_id": "60a756a145926d0998fea992",
 //     "name": "Sweater",
 //     "description": "This is a very nice sweater",
+//     "price": "2500",
 //     "soldOut": false,
 //     "images": [
 //         {
