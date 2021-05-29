@@ -9,13 +9,7 @@ const orderSchema = mongoose.Schema(
     totalBill: String,
     paymentMethod: String,
     finished: Boolean,
-    order: [
-      {
-        image: String,
-        productName: String,
-        productPrice: String,
-      },
-    ],
+    order: [],
   },
   { timestamps: true }
 );

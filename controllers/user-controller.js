@@ -68,7 +68,6 @@ const register = async (req, res, next) => {
         token = jwt.sign({ tokenUser }, process.env.JWT_KEY, {
           expiresIn: "2h",
         });
-        console.log("1 ", token);
       } catch (err) {
         const error = new HttpError("Couldn't generate token", 500);
         return next(error);
